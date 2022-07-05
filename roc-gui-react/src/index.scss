@@ -1,0 +1,6 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.form-group.required .form-label:after {
+  content:"*";
+  color:red;
+}
