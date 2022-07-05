@@ -1,35 +1,48 @@
-import { TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {By} from "@angular/platform-browser";
 
 describe('AppComponent', () => {
+
+  let fixture: ComponentFixture<AppComponent>, component: AppComponent
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        ReactiveFormsModule
       ],
       declarations: [
         AppComponent
       ],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it(`should have as title 'roc-gui-ng'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('roc-gui-ng');
-  });
+  it(`should create a form group with two controls`, () => {
+    const form = component.form
+    expect(form).toBeDefined()
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('roc-gui-ng app is running!');
+    // check that we created 2 controls
+    expect(form.controls).toHaveSize(2)
+
+    // check that the second control has the requried validator
+    const mid = form.controls['model-id'];
+    expect(mid.validator).toBeDefined()
+    expect(mid.validator?.name).toEqual("required")
+  })
+
+  it(`should render a form with two fields`, () => {
+    const formFields = fixture.debugElement.queryAll(By.css('input.form-control'));
+    expect(formFields).toHaveSize(2);
   });
 });

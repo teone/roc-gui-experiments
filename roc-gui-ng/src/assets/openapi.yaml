@@ -1,0 +1,438 @@
+# SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+#
+# SPDX-License-Identifier: Apache-2.0
+components:
+  parameters:
+    fabric-id:
+      content:
+        text/plain; charset=utf-8:
+          schema:
+            type: string
+      description: fabric-id (target in onos-config)
+      in: path
+      name: fabric-id
+      required: true
+  requestBodies:
+    RequestBody_Switch:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Switch'
+    RequestBody_Switch-model:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Switch-model'
+    RequestBody_Switch-model_Port:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Switch-model_Port'
+    RequestBody_Switch_Port:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Switch_Port'
+  schemas:
+    AdditionalPropertiesUnchTarget:
+      description: both the additional property 'unchanged' and the 'fabric-id'
+      properties:
+        fabric-id:
+          description: an override of the fabric-id (target)
+          title: fabric-id
+          type: string
+        unchanged:
+          description: A comma seperated list of unchanged mandatory attribute names
+          title: unchanged
+          type: string
+      title: AdditionalPropertiesUnchTarget
+      type: object
+    AdditionalPropertyFabric-Id:
+      description: Optionally specify a fabric-id other than the default (only on
+        PATCH method)
+      properties:
+        fabric-id:
+          description: an override of the fabric-id (target)
+          title: fabric-id
+          type: string
+      title: AdditionalPropertyFabric-Id
+      type: object
+    AdditionalPropertyUnchanged:
+      description: To optionally omit 'required' properties, add them to 'unchanged'
+        list
+      properties:
+        unchanged:
+          description: A comma seperated list of unchanged mandatory attribute names
+          title: unchanged
+          type: string
+      title: AdditionalPropertyUnchanged
+      type: object
+    Switch:
+      additionalProperties:
+        $ref: '#/components/schemas/AdditionalPropertiesUnchTarget'
+      description: A managed device in the fabric (single)
+      properties:
+        attribute:
+          $ref: '#/components/schemas/Switch_Attribute_List'
+        description:
+          description: long description field
+          maxLength: 1024
+          minLength: 1
+          title: description
+          type: string
+        display-name:
+          description: display name to use in GUI or CLI
+          maxLength: 80
+          minLength: 1
+          title: display-name
+          type: string
+        management:
+          $ref: '#/components/schemas/Switch_Management'
+        model-id:
+          description: link to switch model
+          title: model-id
+          type: string
+          x-leafref: /sm:switch-model/sm:switch-model-id
+        port:
+          $ref: '#/components/schemas/Switch_Port_List'
+        role:
+          description: The role of the switch in the fabric
+          title: role
+          type: string
+        state:
+          $ref: '#/components/schemas/Switch_State'
+        switch-id:
+          description: unique identifier for the switch
+          maxLength: 253
+          minLength: 1
+          pattern: ((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)|\.
+          title: switch-id
+          type: string
+          x-go-type: ListKey
+        switch-pair:
+          $ref: '#/components/schemas/Switch_Switch-pair'
+        vlan:
+          $ref: '#/components/schemas/Switch_Vlan_List'
+      required:
+      - model-id
+      - role
+      - switch-id
+      title: Switch
+      type: object
+      x-list-multiple: true
+    Switch-model:
+      additionalProperties:
+        $ref: '#/components/schemas/AdditionalPropertiesUnchTarget'
+      description: A model of switch (single)
+      properties:
+        attribute:
+          $ref: '#/components/schemas/Switch-model_Attribute_List'
+        description:
+          description: long description field
+          maxLength: 1024
+          minLength: 1
+          title: description
+          type: string
+        display-name:
+          description: display name to use in GUI or CLI
+          maxLength: 80
+          minLength: 1
+          title: display-name
+          type: string
+        pipeline:
+          description: Pipeline configuration - dual or quad
+          title: pipeline
+          type: string
+        port:
+          $ref: '#/components/schemas/Switch-model_Port_List'
+        switch-model-id:
+          description: unique identifier for the switch
+          maxLength: 100
+          minLength: 1
+          pattern: '[a-zA-Z_][a-zA-Z0-9\-_.]*'
+          title: switch-model-id
+          type: string
+          x-go-type: ListKey
+      required:
+      - pipeline
+      - switch-model-id
+      title: Switch-model
+      type: object
+      x-list-multiple: true
+    Switch-model_List:
+      description: A model of switch (list)
+      items:
+        $ref: '#/components/schemas/Switch-model'
+      type: array
+      uniqueItems: true
+      x-keys:
+      - switch-model-id
+      x-list-multiple: true
+    Switch-model_Port:
+      description: A port in a switch (single)
+      properties:
+        cage-number:
+          description: identifier of the cage - physical port on switch
+          maximum: 255
+          minimum: 0
+          title: cage-number
+          type: integer
+          x-go-type: ListKey
+        description:
+          description: long description field
+          maxLength: 1024
+          minLength: 1
+          title: description
+          type: string
+        display-name:
+          description: display name to use in GUI or CLI
+          maxLength: 80
+          minLength: 1
+          title: display-name
+          type: string
+        max-channel:
+          description: |-
+            A splitter can divide the port in to channels.
+            The default value 0 indicates the port is not channelizable
+          maximum: 16
+          minimum: 0
+          title: max-channel
+          type: integer
+        speeds:
+          $ref: '#/components/schemas/Switch-model_Port_Speeds'
+      required:
+      - cage-number
+      title: Switch-model_Port
+      type: object
+      x-list-multiple: true
+    Switch-model_Port_List:
+      description: A port in a switch (list)
+      items:
+        $ref: '#/components/schemas/Switch-model_Port'
+      type: array
+      uniqueItems: true
+      x-keys:
+      - cage-number
+      x-list-multiple: true
+    Switch-model_Port_Speeds:
+      items:
+        description: port speed
+        enum:
+        - speed-100g
+        - speed-10g
+        - speed-1g
+        - speed-2-5g
+        - speed-25g
+        - speed-400g
+        - speed-40g
+        - speed-5g
+        - speed-autoneg
+        title: speeds
+        type: string
+      title: leaf-list-speeds
+      type: array
+    Switch_List:
+      description: A managed device in the fabric (list)
+      items:
+        $ref: '#/components/schemas/Switch'
+      type: array
+      uniqueItems: true
+      x-keys:
+      - switch-id
+      x-list-multiple: true
+    Switch_Port:
+      additionalProperties:
+        $ref: '#/components/schemas/AdditionalPropertyUnchanged'
+      description: A port in a switch (single)
+      properties:
+        cage-number:
+          description: reference to the cage-number of the port in the switch model
+          title: cage-number
+          type: string
+          x-go-type: ListKey
+          x-leafref: /sm:switch-model/sm:port/sm:cage-number
+        channel-number:
+          description: |-
+            reference to the channel-number of the port in the switch model.
+            The value cannot exceed the max-channels of the corresponding port in the switch-model
+          maximum: 16
+          minimum: 0
+          title: channel-number
+          type: integer
+          x-go-type: ListKey
+        description:
+          description: long description field
+          maxLength: 1024
+          minLength: 1
+          title: description
+          type: string
+        dhcp-connect-point:
+          $ref: '#/components/schemas/Switch_Port_Dhcp-connect-point'
+        display-name:
+          description: display name to use in GUI or CLI
+          maxLength: 80
+          minLength: 1
+          title: display-name
+          type: string
+        speed:
+          description: configured port speed
+          enum:
+          - speed-100g
+          - speed-10g
+          - speed-1g
+          - speed-2-5g
+          - speed-25g
+          - speed-400g
+          - speed-40g
+          - speed-5g
+          - speed-autoneg
+          title: speed
+          type: string
+        state:
+          $ref: '#/components/schemas/Switch_Port_State'
+        vlans:
+          $ref: '#/components/schemas/Switch_Port_Vlans'
+      required:
+      - cage-number
+      - channel-number
+      - speed
+      title: Switch_Port
+      type: object
+      x-list-multiple: true
+    Switch_Port_List:
+      description: A port in a switch (list)
+      items:
+        $ref: '#/components/schemas/Switch_Port'
+      type: array
+      uniqueItems: true
+      x-keys:
+      - cage-number
+      - channel-number
+      x-list-multiple: true
+
+info:
+  contact:
+    email: info@opennetworking.org
+    name: Open Networking Foundation
+    url: https://opennetworking.org
+  description: OpenAPI 3 specification is generated from sdn-fabric onos-config model
+    plugin
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  title: sdn-fabric-0.1.x
+  version: 0.1.x
+openapi: 3.0.0
+paths:
+  /sdn-fabric/v0.1.x/{fabric-id}/switch:
+    description: A managed device in the fabric
+    get:
+      operationId: getSwitch_List
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Switch_List'
+          description: GET OK 200
+      summary: GET /switch List
+      tags:
+      - Switch
+      - List
+    parameters:
+    - $ref: '#/components/parameters/fabric-id'
+  /sdn-fabric/v0.1.x/{fabric-id}/switch-model:
+    description: A model of switch
+    get:
+      operationId: getSwitch-model_List
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Switch-model_List'
+          description: GET OK 200
+      summary: GET /switch-model List
+      tags:
+      - Switch-model
+      - List
+    parameters:
+    - $ref: '#/components/parameters/fabric-id'
+  /sdn-fabric/v0.1.x/{fabric-id}/switch-model/{switch-model-id}:
+    delete:
+      operationId: deleteSwitch-model
+      responses:
+        "200":
+          description: DELETE 200 OK
+      summary: DELETE /switch-model
+    description: A model of switch
+    get:
+      operationId: getSwitch-model
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Switch-model'
+          description: GET OK 200
+      summary: GET /switch-model Container
+      tags:
+      - Switch-model
+      - Container
+    parameters:
+    - $ref: '#/components/parameters/fabric-id'
+    - content:
+        text/plain; charset=utf-8:
+          schema:
+            type: string
+      description: key {switch-model-id}
+      in: path
+      name: switch-model-id
+      required: true
+    post:
+      operationId: postSwitch-model
+      requestBody:
+        $ref: '#/components/requestBodies/RequestBody_Switch-model'
+      responses:
+        "201":
+          description: created
+      summary: POST /switch-model
+  /sdn-fabric/v0.1.x/{fabric-id}/switch/{switch-id}:
+    delete:
+      operationId: deleteSwitch
+      responses:
+        "200":
+          description: DELETE 200 OK
+      summary: DELETE /switch
+    description: A managed device in the fabric
+    get:
+      operationId: getSwitch
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Switch'
+          description: GET OK 200
+      summary: GET /switch Container
+      tags:
+      - Switch
+      - Container
+    parameters:
+    - $ref: '#/components/parameters/fabric-id'
+    - content:
+        text/plain; charset=utf-8:
+          schema:
+            type: string
+      description: key {switch-id}
+      in: path
+      name: switch-id
+      required: true
+    post:
+      operationId: postSwitch
+      requestBody:
+        $ref: '#/components/requestBodies/RequestBody_Switch'
+      responses:
+        "201":
+          description: created
+      summary: POST /switch

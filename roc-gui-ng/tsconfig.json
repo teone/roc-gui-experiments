@@ -24,6 +24,7 @@
     ]
   },
   "angularCompilerOptions": {
+    "types" : ["node", "jasmine"],
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
