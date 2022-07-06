@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+#
+# SPDX-License-Identifier: Apache-2.0
+components:
+  schemas:
+    Switch:
+      description: A managed device in the fabric (single)
+      properties:
+        description:
+          description: long description field
+          maxLength: 1024
+          minLength: 1
+          title: description
+          type: string
+        display-name:
+          description: display name to use in GUI or CLI
+          maxLength: 80
+          minLength: 1
+          title: display-name
+          type: string
+      required:
+      - display-name
+      title: Switch
+      type: object
+      x-list-multiple: true
+info:
+  contact:
+    email: info@opennetworking.org
+    name: Open Networking Foundation
+    url: https://opennetworking.org
+  description: OpenAPI 3 specification is generated from sdn-fabric onos-config model
+    plugin
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  title: sdn-fabric-0.1.x
+  version: 0.1.x
+openapi: 3.0.0
+paths: {}
