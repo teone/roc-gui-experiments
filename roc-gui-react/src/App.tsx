@@ -1,46 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-
-interface modelField {
-    name: string
-    description?: string
-    type: "string" | "number"
-    maxLength?: number
-    minLength?: number
-    title: string
-    required?: boolean
-}
-
-interface modelDef {
-    name: string
-    description: string
-    fields: modelField[]
-}
+import {ModelsSpecs, modelDef} from './services/models-specs';
 
 type IProps = {}
 
 function App(props: IProps) {
 
-    // NOTE this has be computed from openApi
-    const modelDef: modelDef = {
-        name: "Swtich",
-        description: "A managed device in the fabric (single)",
-        fields: [
-            {
-                name: "display-name",
-                type: "string",
-                title: "Display Name"
-            },
-            {
-                name: "model-id",
-                type: "string",
-                title: "Model Id",
-                required: true,
-                description: "link to switch model"
-            }
-        ]
-    }
+    useEffect(() => {
+        setModelDefs(ModelsSpecs.getModelsSpecs())
+    }, [])
 
+    const [modelDefs, setModelDefs] = useState<modelDef | null>(null)
     const [inputs, setInputs] = useState({});
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -54,24 +24,26 @@ function App(props: IProps) {
         console.log(inputs);
     }
 
-    return <div>
-        <h1>Form generation example:</h1>
+    const buildForm = (modelDefs: modelDef) => (
         <form onSubmit={handleSubmit}>
-            {modelDef.fields.map((f, i) => {
+            {modelDefs.fields.map((f, i) => {
                 return (
                     <div className="row mt-2" key={i}>
                         <div className="col-xs-12">
                             <div
-                                 className={`form-group ${f.required ? "required" : ""}`}>
+                                className={`form-group ${f.required ? "required" : ""}`}>
                                 <label htmlFor={f.name} className="form-label">
                                     {f.title}
                                 </label>
-                                <input
-                                    className="form-control"
-                                    name={f.name}
-                                    placeholder={f.name}
-                                    onChange={handleChange}
-                                    type="text"/>
+                                {f.type == "string" ? (
+                                    <input
+                                        className="form-control"
+                                        name={f.name}
+                                        placeholder={f.description}
+                                        onChange={handleChange}
+                                        type="text"/>
+                                ) : ""}
+
                             </div>
                         </div>
                     </div>
@@ -81,6 +53,11 @@ function App(props: IProps) {
                 <button type="submit" className="btn btn-primary mb-3" disabled={false}>Save</button>
             </div>
         </form>
+    )
+
+    return <div data-testid="app">
+        <h1>Form generation example:</h1>
+        {modelDefs != null ? buildForm(modelDefs) : ""}
         <div className="row mt-5">
             <div className="col-xs-12">
                 <div className="card">
@@ -90,7 +67,7 @@ function App(props: IProps) {
                     </div>
                     <div className="card-body">
                         <code>
-                            <pre>{JSON.stringify(modelDef, null, 2)}</pre>
+                            <pre>{JSON.stringify(modelDefs, null, 2)}</pre>
                         </code>
                     </div>
                 </div>
