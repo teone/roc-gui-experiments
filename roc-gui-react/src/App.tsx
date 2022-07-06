@@ -35,7 +35,7 @@ function App(props: IProps) {
                                 <label htmlFor={f.name} className="form-label">
                                     {f.title}
                                 </label>
-                                {f.type == "string" ? (
+                                {f.type === "string" ? (
                                     <input
                                         className="form-control"
                                         name={f.name}

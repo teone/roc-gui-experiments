@@ -35,10 +35,12 @@ describe('AppComponent', () => {
     // check that we created 2 controls
     expect(form.controls).toHaveSize(2)
 
-    // check that the second control has the requried validator
+    // check that the second control has the required validator
     const mid = form.controls['model-id'];
     expect(mid.validator).toBeDefined()
-    expect(mid.validator?.name).toEqual("required")
+    expect(mid.valid).toBeFalsy();
+    mid.setValue('foo')
+    expect(mid.valid).toBeTruthy();
   })
 
   it(`should render a form with two fields`, () => {
